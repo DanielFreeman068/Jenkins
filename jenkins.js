@@ -782,7 +782,8 @@ const input = [
     "BFBFFFFRLL",
 ];
 
-
+// Array for all grids
+let gridSquares = [];
 function decodeString(encoded) {
         const rowPart = encoded.slice(0, 7);
         const columnPart = encoded.slice(7); 
@@ -800,7 +801,6 @@ function decodeString(encoded) {
                     lower = mid + 1;
                 }
             }
-    5
             return lower;
         }
     
@@ -812,21 +812,43 @@ function decodeString(encoded) {
 
         // Grid Number
         const grid = ((row * 8) + column);
-    
+
         return { row, column, grid };
     }
     
     input.forEach(encoded => {
         const { row, column, grid } = decodeString(encoded);
-        gridSquares.push(grid);
         console.log(`Encoded: ${encoded}`);
         console.log(`Row: ${row}`);
         console.log(`Column: ${column}`);
         console.log(`Grid Space: ${grid}`)
-        console.log('---');
+        gridSquares.push(grid);
     });
-    
-let gridSquares = [];
 gridSquares.sort((a, b) => a -b);
 let max = gridSquares[gridSquares.length - 1];
 let min = gridSquares[0];
+console.log(`Min ${min}, Max ${max}`);
+
+// console.log(gridSquares);
+
+
+function decodeInstruction(instruction) {
+    let row = parseInt(instruction.slice(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
+    let column = parseInt(instruction.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
+    return row * 8 + column;
+}
+
+
+// const sortedGridSquares = Array.from(gridSquares).sort((a, b) => a - b);
+// const sortedGridSquaresSet = new Set(Array.from(gridSquares).sort((a, b) => a - b));
+const allSquares = new Set(input.map(decodeInstruction));
+const missingSquares = [];
+
+for (let i = min; i <= max; i++) {
+    if (!allSquares.has(i)) {
+        missingSquares.push(i);
+    }
+}
+
+console.log("Missing squares:", missingSquares);
+// console.log(sortedGridSquaresSet);

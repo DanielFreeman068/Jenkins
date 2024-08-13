@@ -782,73 +782,48 @@ const input = [
     "BFBFFFFRLL",
 ];
 
-// Array for all grids
-let gridSquares = [];
-function decodeString(encoded) {
-        const rowPart = encoded.slice(0, 7);
-        const columnPart = encoded.slice(7); 
-    
-        // Function to decode row or column
-        function decodeBinarySpacePartitioning(part, lowerHalfChar, upperHalfChar, range) {
-            let lower = 0;
-            let upper = range - 1;
-    
-            for (const char of part) {
-                const mid = Math.ceil((lower + upper) / 2);
-                if (char === lowerHalfChar) {
-                    upper = mid;
-                } else if (char === upperHalfChar) {
-                    lower = mid + 1;
-                }
-            }
-            return lower;
-        }
-    
-        // Decode row
-        const row = decodeBinarySpacePartitioning(rowPart, 'F', 'B', 127);
-    
-        // Decode column
-        const column = decodeBinarySpacePartitioning(columnPart, 'L', 'R', 7);
+function decodeInstruction(input) {
+    let maxsq = Number.MIN_SAFE_INTEGER;
+    let minsq = Number.MAX_SAFE_INTEGER;
 
-        // Grid Number
-        const grid = ((row * 8) + column);
 
-        return { row, column, grid };
-    }
-    
-    input.forEach(encoded => {
-        const { row, column, grid } = decodeString(encoded);
-        console.log(`Encoded: ${encoded}`);
-        console.log(`Row: ${row}`);
-        console.log(`Column: ${column}`);
-        console.log(`Grid Space: ${grid}`)
-        gridSquares.push(grid);
+    input.forEach(code =>{
+        let row = parseInt(code.slice(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
+        let column = parseInt(code.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
+        let square = (row * 8) + column;
+        allSquares.push(square);
+
+
+        minsq = Math.min(minsq, square);
+        maxsq = Math.max(maxsq, square);
     });
-gridSquares.sort((a, b) => a -b);
-let max = gridSquares[gridSquares.length - 1];
-let min = gridSquares[0];
-console.log(`Min ${min}, Max ${max}`);
-
-// console.log(gridSquares);
 
 
-function decodeInstruction(instruction) {
-    let row = parseInt(instruction.slice(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
-    let column = parseInt(instruction.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
-    return row * 8 + column;
+    return {minsq, maxsq}
+
 }
 
+const {minsq, maxsq} = decodeInstruction(input);
+console.log(`Min: ${minsq}, Max: ${maxsq}`);
 
-// const sortedGridSquares = Array.from(gridSquares).sort((a, b) => a - b);
-// const sortedGridSquaresSet = new Set(Array.from(gridSquares).sort((a, b) => a - b));
-const allSquares = new Set(input.map(decodeInstruction));
 const missingSquares = [];
 
-for (let i = min; i <= max; i++) {
-    if (!allSquares.has(i)) {
-        missingSquares.push(i);
-    }
+function findMissingSquare(minsq, maxsq, input) {
+    const allSquares = new Set(
+        input.map(code => {
+            let row = parseInt(code.slice(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
+            let column = parseInt(code.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
+            retur (row * 8) + column;
+        })
+    );
+    return Array.from({ length: maxsq - minsq})
 }
 
-console.log("Missing squares:", missingSquares);
-// console.log(sortedGridSquaresSet);
+
+// for (let i = minsq; i <= maxsq; i++) {
+//     if (!allSquares.includes(i)) {
+//         missingSquares.push(i);
+//     }
+// }
+
+console.log(`Missing Square: ${missingSquares}`);

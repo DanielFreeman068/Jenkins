@@ -781,21 +781,25 @@ const input = [
     "FBFBFBFLRR",
     "BFBFFFFRLL",
 ];
-
+let allHoles = [];
+let rows = [];
+let cols = [];
+//decodes message
 function decodeInstruction(input) {
     let maxsq = Number.MIN_SAFE_INTEGER;
     let minsq = Number.MAX_SAFE_INTEGER;
-
 
     input.forEach(code =>{
         let row = parseInt(code.slice(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
         let column = parseInt(code.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
         let square = (row * 8) + column;
-        allSquares.push(square);
+        allHoles.push(square);
 
-
+//finds the smallest and largest number
         minsq = Math.min(minsq, square);
         maxsq = Math.max(maxsq, square);
+        rows.push(row);
+        cols.push(column);
     });
 
 
@@ -805,25 +809,58 @@ function decodeInstruction(input) {
 
 const {minsq, maxsq} = decodeInstruction(input);
 console.log(`Min: ${minsq}, Max: ${maxsq}`);
-
-const missingSquares = [];
-
-function findMissingSquare(minsq, maxsq, input) {
+//finds the missing square
+function findMissingSquares(minsq, maxsq, input) {
     const allSquares = new Set(
         input.map(code => {
             let row = parseInt(code.slice(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
-            let column = parseInt(code.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
-            retur (row * 8) + column;
+            let col = parseInt(code.slice(7).replace(/L/g, '0').replace(/R/g, '1'), 2);
+            return (row * 8) + col;
         })
     );
-    return Array.from({ length: maxsq - minsq})
+
+    return Array.from({ length: maxsq - minsq + 1 }, (_, i) => minsq + i)
+                .filter(square => !allSquares.has(square));
 }
 
-
-// for (let i = minsq; i <= maxsq; i++) {
-//     if (!allSquares.includes(i)) {
-//         missingSquares.push(i);
-//     }
-// }
-
+const missingSquares = findMissingSquares(minsq, maxsq, input);
 console.log(`Missing Square: ${missingSquares}`);
+
+//find original coordinate
+function findOriginalCoords(number) {
+    const rowCoord = number >> 3;
+    const columnCoord = number & 7;
+
+    columnCode = columnCoord.toString(2).padStart(3, '0').replace(/0/g, 'L').replace(/1/g, 'R');
+    rowCode = rowCoord.toString(2).padStart(7, '0').replace(/0/g, 'F').replace(/1/g, 'B');
+
+    return rowCode + columnCode;
+};
+
+const originalCoords = findOriginalCoords(missingSquares);
+console.log(originalCoords);
+
+let totalRow = rows.reduce((total, next) => {
+    return total + next;
+}, 0);
+
+let totalCol = cols.reduce((total, next) => {
+    return total + next;
+}, 0);
+
+let total = totalRow * totalCol;
+console.log(parseInt(total.toString().slice(0, 6)));
+
+let answer = allHoles.map((example)=>{
+    if(example < minsq){
+
+        return age < 21 ? {...person, ejected:true} : {...person, ejected:false} //ternary to eject any under 21 person with an alch beverage
+    }
+    return {...person, ejected:false}
+    // alchDrinks.includes(drink) ? age < 21 ? {...person, ejected:true} : {...person, ejected:false} : null
+    // the code above combines all three to make a nested ternary statement
+})
+console.log(newArray)
+console.log(Array.from(newArray))
+
+//make index variable and add to it every example we go thru and when it reaches the right width we go to new line

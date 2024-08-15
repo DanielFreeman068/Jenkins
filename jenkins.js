@@ -795,7 +795,7 @@ function decodeInstruction(input) {
         let square = (row * 8) + column;
         allHoles.push(square);
 
-//finds the smallest and largest number
+//finds the smallest and largest number Task 1
         minsq = Math.min(minsq, square);
         maxsq = Math.max(maxsq, square);
         rows.push(row);
@@ -809,7 +809,7 @@ function decodeInstruction(input) {
 
 const {minsq, maxsq} = decodeInstruction(input);
 console.log(`Min: ${minsq}, Max: ${maxsq}`);
-//finds the missing square
+//finds the missing square Task 2
 function findMissingSquares(minsq, maxsq, input) {
     const allSquares = new Set(
         input.map(code => {
@@ -826,7 +826,7 @@ function findMissingSquares(minsq, maxsq, input) {
 const missingSquares = findMissingSquares(minsq, maxsq, input);
 console.log(`Missing Square: ${missingSquares}`);
 
-//find original coordinate
+//find original coordinate Task 3
 function findOriginalCoords(number) {
     const rowCoord = number >> 3;
     const columnCoord = number & 7;
@@ -836,10 +836,10 @@ function findOriginalCoords(number) {
 
     return rowCode + columnCode;
 };
-
 const originalCoords = findOriginalCoords(missingSquares);
 console.log(originalCoords);
 
+//Task 4 use reduct to find the totals of cols and rows then multiply them and slice 0s
 let totalRow = rows.reduce((total, next) => {
     return total + next;
 }, 0);
@@ -851,16 +851,18 @@ let totalCol = cols.reduce((total, next) => {
 let total = totalRow * totalCol;
 console.log(parseInt(total.toString().slice(0, 6)));
 
-let answer = allHoles.map((example)=>{
-    if(example < minsq){
-
-        return age < 21 ? {...person, ejected:true} : {...person, ejected:false} //ternary to eject any under 21 person with an alch beverage
+//Task 5 visual representation of map
+let emptyArray = Array(1028).fill('.');
+function visualMap(){
+    emptyArray.map((item, index) => {
+        index <= maxsq && index >= minsq ? emptyArray[index] = '#' : null;
+        index == missingSquares[0] ? emptyArray[index] = 'X' : null;
+        return true;
+    })
+    newerArray = [];
+    for(let i = 0; i < emptyArray.length; i += 8){
+        newerArray.push(emptyArray.slice(i, i + 8).join(''))
     }
-    return {...person, ejected:false}
-    // alchDrinks.includes(drink) ? age < 21 ? {...person, ejected:true} : {...person, ejected:false} : null
-    // the code above combines all three to make a nested ternary statement
-})
-console.log(newArray)
-console.log(Array.from(newArray))
-
-//make index variable and add to it every example we go thru and when it reaches the right width we go to new line
+    console.log(newerArray.join('\n'))
+}
+visualMap();
